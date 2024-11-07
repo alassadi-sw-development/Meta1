@@ -4,17 +4,24 @@ import React, { useState } from 'react';
 export default function Sub({ navigation }) {
   const [input, setInput] = useState("");
 
+  const isValidEmail = (email) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
   const handleSubscribe = () => {
-    Alert.alert(
-      "Thank You!",
-      "Thanks for subscribing!",
-      [
-        {
-          text: "OK",
-          onPress: () => navigation.goBack(),
-        },
-      ]
-    );
+    if (isValidEmail(input)) {
+      Alert.alert(
+        "Thank You!",
+        "Thanks for subscribing!",
+        [
+          {
+            text: "OK",
+            onPress: () => navigation.goBack(),
+          },
+        ]
+      );
+    }
   };
 
   return (
@@ -31,7 +38,11 @@ export default function Sub({ navigation }) {
         keyboardType="email-address"
       />
       <Text style={styles.displayText}>Your E-Mail: {input}</Text>
-      <Pressable style={styles.button} onPress={handleSubscribe}>
+      <Pressable
+        style={[styles.button, { backgroundColor: isValidEmail(input) ? '#125016' : '#ccc' }]}
+        onPress={handleSubscribe}
+        disabled={!isValidEmail(input)}
+      >
         <Text style={styles.buttonText}>Subscribe</Text>
       </Pressable>
     </View>
@@ -78,12 +89,11 @@ const styles = StyleSheet.create({
     color: '#125016',
   },
   button: {
-    backgroundColor: '#125016',
     paddingVertical: 15,
     paddingHorizontal: 20,
     borderRadius: 10,
     width: '90%',
-    marginTop :30,
+    marginTop: 30,
   },
   buttonText: {
     color: '#e1ebe1',
